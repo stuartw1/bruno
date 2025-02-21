@@ -92,13 +92,19 @@ const transformOpenapiRequestItem = (request) => {
       }
     }
   };
-
+  console.log("vars");
   each(_operationObject.parameters || [], (param) => {
+    nameout='';
+    if (request.method.toUpperCase() === 'DELETE'){
+      nameout = 'delete_'+param.name;
+    } else {
+      nameout = param.name;
+    };
     if (param.in === 'query') {
       brunoRequestItem.request.params.push({
         uid: uuid(),
         name: param.name,
-        value: '',
+        value: '{{'+nameout+'}}',
         description: param.description || '',
         enabled: param.required,
         type: 'query'
@@ -107,7 +113,7 @@ const transformOpenapiRequestItem = (request) => {
       brunoRequestItem.request.params.push({
         uid: uuid(),
         name: param.name,
-        value: '',
+        value: '{{'+nameout+'}}',
         description: param.description || '',
         enabled: param.required,
         type: 'path'
@@ -116,11 +122,12 @@ const transformOpenapiRequestItem = (request) => {
       brunoRequestItem.request.headers.push({
         uid: uuid(),
         name: param.name,
-        value: '',
+        value: '{{'+nameout+'}}',
         description: param.description || '',
         enabled: param.required
       });
     }
+    console.log("  "+nameout+": 1")
   });
 
   let auth;
